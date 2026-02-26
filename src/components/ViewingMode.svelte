@@ -1,5 +1,5 @@
 <script>
-  import { goHome, watchCamera } from '../lib/router.js';
+  import { goHome, watchCamera, wanderTo } from '../lib/router.js';
   import { biomes } from '../lib/biomes.js';
   import { getLocalTime } from '../lib/time.js';
   import YouTubePlayer from './YouTubePlayer.svelte';
@@ -38,14 +38,22 @@
   // Get camera index in the filtered list
   let currentIndex = $derived(cameras.findIndex(c => c.id === camera.id));
 
+  function navigate(cameraId) {
+    if (wanderMode) {
+      wanderTo(cameraId);
+    } else {
+      watchCamera(cameraId);
+    }
+  }
+
   function goToPrevCamera() {
     const idx = currentIndex <= 0 ? cameras.length - 1 : currentIndex - 1;
-    watchCamera(cameras[idx].id);
+    navigate(cameras[idx].id);
   }
 
   function goToNextCamera() {
     const idx = currentIndex >= cameras.length - 1 ? 0 : currentIndex + 1;
-    watchCamera(cameras[idx].id);
+    navigate(cameras[idx].id);
   }
 
   function goToRandomCamera() {
@@ -53,7 +61,7 @@
     do {
       idx = Math.floor(Math.random() * cameras.length);
     } while (idx === currentIndex && cameras.length > 1);
-    watchCamera(cameras[idx].id);
+    navigate(cameras[idx].id);
   }
 
   function handleKeydown(e) {

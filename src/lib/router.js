@@ -14,8 +14,9 @@ export function parseRoute() {
     return { view: 'watch', cameraId };
   }
 
-  if (hash === '#/wander') {
-    return { view: 'wander', cameraId: null };
+  if (hash.startsWith('#/wander')) {
+    const cameraId = hash.slice('#/wander/'.length) || null;
+    return { view: 'wander', cameraId };
   }
 
   return { view: 'browse', cameraId: null };
@@ -31,6 +32,10 @@ export function watchCamera(cameraId) {
 
 export function goHome() {
   navigateTo('/');
+}
+
+export function wanderTo(cameraId) {
+  navigateTo(`/wander/${cameraId}`);
 }
 
 export function startWander() {
