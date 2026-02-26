@@ -82,9 +82,6 @@
       goToNextCamera();
     } else if (e.key === 'i' || e.key === 'I') {
       showInfo = !showInfo;
-    } else if (e.key === ' ' && wanderMode) {
-      e.preventDefault();
-      toggleWanderPause();
     }
   }
 </script>
