@@ -2,12 +2,17 @@
  * Simple hash-based router for Wilds.
  * Routes:
  *   #/           → browse
+ *   #/about      → about page
  *   #/watch/:id  → viewing a specific camera
  *   #/wander     → auto-cycling mode
  */
 
 export function parseRoute() {
   const hash = window.location.hash || '#/';
+
+  if (hash === '#/about') {
+    return { view: 'about' };
+  }
 
   if (hash.startsWith('#/watch/')) {
     const cameraId = hash.slice('#/watch/'.length);
@@ -40,4 +45,8 @@ export function wanderTo(cameraId) {
 
 export function startWander() {
   navigateTo('/wander');
+}
+
+export function goAbout() {
+  navigateTo('/about');
 }

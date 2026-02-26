@@ -1,6 +1,8 @@
 <footer class="footer">
   <p>
     A <a href="https://www.codehawks.co.uk" target="_blank" rel="noopener noreferrer">CodeHawks</a> project
+    <span class="sep">&middot;</span>
+    <a href="#/about">About</a>
   </p>
 </footer>
 
@@ -22,5 +24,10 @@
 
   .footer a:hover {
     color: var(--text);
+  }
+
+  .sep {
+    margin: 0 0.4rem;
+    opacity: 0.4;
   }
 </style>

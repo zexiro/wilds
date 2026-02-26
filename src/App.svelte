@@ -2,6 +2,7 @@
   import { parseRoute } from './lib/router.js';
   import { cameras, getCameraById, matchStreamsToCameras } from './lib/cameras.js';
   import BrowseView from './components/BrowseView.svelte';
+  import AboutView from './components/AboutView.svelte';
   import ViewingMode from './components/ViewingMode.svelte';
   import Footer from './components/Footer.svelte';
 
@@ -64,6 +65,9 @@
       cameras={resolvedCameras}
       wanderMode={true}
     />
+  {:else if route.view === 'about'}
+    <AboutView />
+    <Footer />
   {:else}
     <BrowseView cameras={resolvedCameras} />
     <Footer />
