@@ -402,6 +402,17 @@
   /* ── Responsive ────────────────────────────────────── */
 
   @media (max-width: 768px) {
+    .viewing-mode {
+      height: auto;
+      min-height: 100vh;
+    }
+
+    .player-area {
+      flex: none;
+      aspect-ratio: 16 / 9;
+      width: 100%;
+    }
+
     .camera-label {
       font-size: 0.75rem;
       gap: 0.3rem;
