@@ -78,12 +78,17 @@
 
   @media (max-width: 768px) {
     .biome-tabs {
+      justify-content: flex-start;
       padding: 0 1rem;
     }
 
     .tab {
       padding: 0.5rem 0.75rem;
       font-size: 0.8rem;
+    }
+
+    .tab-name {
+      display: none;
     }
   }
 </style>
