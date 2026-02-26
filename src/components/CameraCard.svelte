@@ -8,6 +8,11 @@
   let biome = $derived(biomes[camera.biome]);
   let localTime = $state(null);
 
+  // YouTube provides thumbnails at predictable URLs
+  let thumbnailUrl = $derived(
+    `https://img.youtube.com/vi/${camera.youtubeVideoId}/mqdefault.jpg`
+  );
+
   // Update time immediately and every minute
   $effect(() => {
     const tz = camera.timezone;
@@ -28,6 +33,8 @@
       handleClick();
     }
   }
+
+  let imgFailed = $state(false);
 </script>
 
 <button
@@ -38,8 +45,22 @@
   style="--biome-color: {biome?.color || 'var(--accent)'}"
 >
   <div class="card-thumbnail">
-    <div class="thumbnail-placeholder">
+    {#if !imgFailed}
+      <img
+        src={thumbnailUrl}
+        alt="{camera.name} preview"
+        class="thumbnail-img"
+        loading="lazy"
+        onerror={() => imgFailed = true}
+      />
+    {/if}
+    <div class="thumbnail-placeholder" class:hidden={!imgFailed}>
       <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+        <polygon points="5 3 19 12 5 21" />
+      </svg>
+    </div>
+    <div class="play-overlay">
+      <svg viewBox="0 0 24 24" width="36" height="36" fill="white" opacity="0.9">
         <polygon points="5 3 19 12 5 21" />
       </svg>
     </div>
@@ -87,6 +108,14 @@
     overflow: hidden;
   }
 
+  .thumbnail-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .thumbnail-placeholder {
     position: absolute;
     inset: 0;
@@ -95,6 +124,25 @@
     justify-content: center;
     color: var(--text-muted);
     opacity: 0.3;
+  }
+
+  .thumbnail-placeholder.hidden {
+    display: none;
+  }
+
+  .play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .card:hover .play-overlay {
+    opacity: 1;
   }
 
   .card-badge {

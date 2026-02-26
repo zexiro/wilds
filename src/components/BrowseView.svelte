@@ -4,7 +4,7 @@
   import BiomeTabs from './BiomeTabs.svelte';
   import CameraCard from './CameraCard.svelte';
 
-  let { cameras, ytReady } = $props();
+  let { cameras } = $props();
 
   let selectedBiome = $state('all');
   let filteredCameras = $derived(getCamerasByBiome(selectedBiome));

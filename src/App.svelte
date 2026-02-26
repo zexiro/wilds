@@ -1,13 +1,11 @@
 <script>
   import { parseRoute, goHome } from './lib/router.js';
   import { cameras, getCameraById } from './lib/cameras.js';
-  import { loadYouTubeAPI } from './lib/youtube.js';
   import BrowseView from './components/BrowseView.svelte';
   import ViewingMode from './components/ViewingMode.svelte';
   import Footer from './components/Footer.svelte';
 
   let route = $state(parseRoute());
-  let ytReady = $state(false);
 
   // Listen for hash changes
   $effect(() => {
@@ -16,13 +14,6 @@
     };
     window.addEventListener('hashchange', handler);
     return () => window.removeEventListener('hashchange', handler);
-  });
-
-  // Load YouTube API on mount
-  $effect(() => {
-    loadYouTubeAPI().then(() => {
-      ytReady = true;
-    });
   });
 
   let currentCamera = $derived(
@@ -38,18 +29,16 @@
     <ViewingMode
       camera={currentCamera}
       {cameras}
-      {ytReady}
       wanderMode={isWandering}
     />
   {:else if isViewing && isWandering}
     <ViewingMode
       camera={cameras[0]}
       {cameras}
-      {ytReady}
       wanderMode={true}
     />
   {:else}
-    <BrowseView {cameras} {ytReady} />
+    <BrowseView {cameras} />
     <Footer />
   {/if}
 </div>

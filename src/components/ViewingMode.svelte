@@ -6,7 +6,7 @@
   import CameraInfo from './CameraInfo.svelte';
   import Footer from './Footer.svelte';
 
-  let { camera, cameras, ytReady, wanderMode = false } = $props();
+  let { camera, cameras, wanderMode = false } = $props();
 
   let showInfo = $state(false);
   let localTime = $state(null);
@@ -79,7 +79,7 @@
   <!-- Player -->
   <div class="player-area">
     {#key camera.id}
-      <YouTubePlayer videoId={camera.youtubeVideoId} {ytReady} />
+      <YouTubePlayer videoId={camera.youtubeVideoId} />
     {/key}
   </div>
 
