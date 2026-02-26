@@ -165,7 +165,7 @@
           Paused
         {:else}
           <span class="wander-dot"></span>
-          Wandering · {countdown}s
+          Wandering · {countdown}<span class="unit">s</span>
         {/if}
       </button>
     {/if}
@@ -363,6 +363,11 @@
 
   .wander-toggle:hover {
     background: rgba(255, 255, 255, 0.14);
+  }
+
+  .unit {
+    font-size: 0.6em;
+    opacity: 0.7;
   }
 
   .wander-dot {
