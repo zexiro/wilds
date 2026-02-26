@@ -12,6 +12,7 @@
   let localTime = $state(null);
   let biome = $derived(biomes[camera.biome]);
   let wanderTimer = $state(null);
+  let wanderPaused = $state(false);
 
   // Update time immediately and every minute
   $effect(() => {
@@ -23,9 +24,9 @@
     return () => clearInterval(interval);
   });
 
-  // Wander mode: auto-cycle every 30 seconds
+  // Wander mode: auto-cycle every 30 seconds (unless paused)
   $effect(() => {
-    if (wanderMode) {
+    if (wanderMode && !wanderPaused) {
       wanderTimer = setInterval(() => {
         goToNextCamera();
       }, 30000);
@@ -34,6 +35,10 @@
       };
     }
   });
+
+  function toggleWanderPause() {
+    wanderPaused = !wanderPaused;
+  }
 
   // Get camera index in the filtered list
   let currentIndex = $derived(cameras.findIndex(c => c.id === camera.id));
@@ -77,6 +82,9 @@
       goToNextCamera();
     } else if (e.key === 'i' || e.key === 'I') {
       showInfo = !showInfo;
+    } else if (e.key === ' ' && wanderMode) {
+      e.preventDefault();
+      toggleWanderPause();
     }
   }
 </script>
@@ -149,10 +157,17 @@
     </button>
 
     {#if wanderMode}
-      <span class="wander-indicator">
-        <span class="wander-dot"></span>
-        Wandering
-      </span>
+      <button class="wander-toggle" onclick={toggleWanderPause} aria-label={wanderPaused ? 'Resume wandering' : 'Pause wandering'}>
+        {#if wanderPaused}
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+          Paused
+        {:else}
+          <span class="wander-dot"></span>
+          Wandering
+        {/if}
+      </button>
     {/if}
 
     <div class="counter">
@@ -331,7 +346,7 @@
     background: rgba(255, 255, 255, 0.15);
   }
 
-  .wander-indicator {
+  .wander-toggle {
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -339,6 +354,15 @@
     color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    padding: 0.4rem 0.8rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    transition: all var(--transition);
+    cursor: pointer;
+  }
+
+  .wander-toggle:hover {
+    background: rgba(255, 255, 255, 0.14);
   }
 
   .wander-dot {
