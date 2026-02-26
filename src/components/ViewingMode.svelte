@@ -409,6 +409,25 @@
   /* ── Responsive ────────────────────────────────────── */
 
   @media (max-width: 768px) {
+    .viewing-mode {
+      height: auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .player-area {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .top-bar {
+      position: absolute;
+      z-index: 5;
+    }
+
     .camera-label {
       font-size: 0.75rem;
       gap: 0.3rem;
@@ -418,14 +437,52 @@
       display: none;
     }
 
+    .nav-controls {
+      position: absolute;
+      top: 0;
+      height: calc(100vw * 9 / 16);
+      transform: none;
+      align-items: center;
+    }
+
     .nav-btn {
-      width: 36px;
-      height: 36px;
+      width: 44px;
+      height: 44px;
       opacity: 0.5;
     }
 
     .viewing-mode:hover .nav-btn {
       opacity: 0.5;
+    }
+
+    .bottom-bar {
+      position: relative;
+      background: var(--bg, #0a0b0d);
+      padding: 1.25rem 1rem;
+      gap: 0.75rem;
+    }
+
+    .pill-btn {
+      padding: 0.65rem 1.2rem;
+      font-size: 0.9rem;
+      opacity: 1;
+    }
+
+    .wander-toggle {
+      padding: 0.65rem 1.2rem;
+      font-size: 0.85rem;
+    }
+
+    .counter {
+      font-size: 0.85rem;
+    }
+
+    .viewing-footer {
+      position: relative;
+      bottom: auto;
+      opacity: 1;
+      pointer-events: auto;
+      padding: 1rem 0;
     }
   }
 </style>
