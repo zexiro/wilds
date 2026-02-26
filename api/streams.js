@@ -50,7 +50,10 @@ export default async function handler(req, res) {
         url.searchParams.set('key', apiKey);
 
         const resp = await fetch(url.toString());
-        if (!resp.ok) return { channelId, items: [] };
+        if (!resp.ok) {
+          const text = await resp.text().catch(() => '');
+          return { channelId, items: [], error: `${resp.status}: ${text.slice(0, 200)}` };
+        }
 
         const data = await resp.json();
         return {
@@ -63,19 +66,25 @@ export default async function handler(req, res) {
       })
     );
 
+    const errors = [];
     for (const result of results) {
       if (result.status === 'fulfilled' && result.value) {
-        const { channelId, items } = result.value;
+        const { channelId, items, error } = result.value;
+        if (error) errors.push({ channelId, error });
         if (items.length > 0) {
           streams[channelId] = items;
         }
+      } else if (result.status === 'rejected') {
+        errors.push({ error: result.reason?.message || 'unknown' });
       }
     }
 
-    // Cache for 2 hours, allow stale-while-revalidate for 4 hours
-    res.setHeader('Cache-Control', 's-maxage=7200, stale-while-revalidate=14400');
+    // Cache for 10 minutes, allow stale-while-revalidate for 30 minutes
+    res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=1800');
     res.setHeader('Access-Control-Allow-Origin', '*');
-    return res.status(200).json({ streams, timestamp: Date.now() });
+    const response = { streams, timestamp: Date.now() };
+    if (errors.length > 0) response.errors = errors;
+    return res.status(200).json(response);
 
   } catch (err) {
     res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
