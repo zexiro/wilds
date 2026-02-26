@@ -23,12 +23,12 @@
     return () => clearInterval(interval);
   });
 
-  // Wander mode: auto-cycle every 60 seconds
+  // Wander mode: auto-cycle every 30 seconds
   $effect(() => {
     if (wanderMode) {
       wanderTimer = setInterval(() => {
         goToNextCamera();
-      }, 60000);
+      }, 30000);
       return () => {
         if (wanderTimer) clearInterval(wanderTimer);
       };
