@@ -4,7 +4,6 @@
   import { getLocalTime } from '../lib/time.js';
   import YouTubePlayer from './YouTubePlayer.svelte';
   import CameraInfo from './CameraInfo.svelte';
-  import Footer from './Footer.svelte';
 
   let { camera, cameras, wanderMode = false } = $props();
 
@@ -93,13 +92,6 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <div class="viewing-mode">
-  <!-- Player -->
-  <div class="player-area">
-    {#key camera.id}
-      <YouTubePlayer videoId={camera.resolvedVideoId || camera.youtubeVideoId} />
-    {/key}
-  </div>
-
   <!-- Top bar -->
   <div class="top-bar">
     <button class="icon-btn" onclick={goHome} aria-label="Back to browse">
@@ -120,29 +112,40 @@
       {/if}
     </div>
 
-    <button class="icon-btn" onclick={() => showInfo = !showInfo} aria-label="Toggle camera info">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+    <button class="info-btn" onclick={() => showInfo = !showInfo} aria-label="Toggle camera info">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10" />
         <line x1="12" y1="16" x2="12" y2="12" />
         <line x1="12" y1="8" x2="12.01" y2="8" />
       </svg>
+      About
     </button>
   </div>
 
-  <!-- Navigation controls -->
-  <div class="nav-controls">
-    <button class="nav-btn prev" onclick={goToPrevCamera} aria-label="Previous camera">
-      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="15 18 9 12 15 6" />
-      </svg>
-    </button>
+  <!-- Player -->
+  <div class="player-area">
+    {#key camera.id}
+      <YouTubePlayer videoId={camera.resolvedVideoId || camera.youtubeVideoId} />
+    {/key}
 
-    <button class="nav-btn next" onclick={goToNextCamera} aria-label="Next camera">
-      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="9 6 15 12 9 18" />
-      </svg>
-    </button>
+    <!-- Navigation controls -->
+    <div class="nav-controls">
+      <button class="nav-btn prev" onclick={goToPrevCamera} aria-label="Previous camera">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+
+      <button class="nav-btn next" onclick={goToNextCamera} aria-label="Next camera">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 6 15 12 9 18" />
+        </svg>
+      </button>
+    </div>
   </div>
+
+  <!-- Info panel -->
+  <CameraInfo {camera} visible={showInfo} onClose={() => showInfo = false} />
 
   <!-- Bottom bar -->
   <div class="bottom-bar">
@@ -176,13 +179,6 @@
     </div>
   </div>
 
-  <!-- Info panel -->
-  <CameraInfo {camera} visible={showInfo} onClose={() => showInfo = false} />
-
-  <!-- Footer overlay -->
-  <div class="viewing-footer">
-    <Footer />
-  </div>
 </div>
 
 <style>
@@ -192,26 +188,26 @@
     height: 100vh;
     background: #000;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   .player-area {
-    position: absolute;
-    inset: 0;
+    position: relative;
+    flex: 1;
+    min-height: 0;
   }
 
   /* ── Top Bar ───────────────────────────────────────── */
 
   .top-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.75rem 1rem;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+    padding: 0.5rem 1rem;
+    background: var(--bg, #0a0b0d);
     z-index: 5;
+    flex-shrink: 0;
   }
 
   .icon-btn {
@@ -314,16 +310,14 @@
   /* ── Bottom Bar ────────────────────────────────────── */
 
   .bottom-bar {
-    position: absolute;
-    bottom: 3.5rem;
-    left: 0;
-    right: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 1rem;
+    background: var(--bg, #0a0b0d);
     z-index: 5;
+    flex-shrink: 0;
   }
 
   .pill-btn {
@@ -365,8 +359,6 @@
     background: rgba(255, 255, 255, 0.14);
   }
 
-
-
   .wander-dot {
     width: 6px;
     height: 6px;
@@ -387,46 +379,29 @@
     opacity: 0.6;
   }
 
-  /* ── Footer ────────────────────────────────────────── */
+  /* ── Info Button ───────────────────────────────────── */
 
-  .viewing-footer {
-    position: absolute;
-    bottom: 6rem;
-    left: 0;
-    right: 0;
-    z-index: 4;
-    opacity: 0;
-    transition: opacity var(--transition);
-    pointer-events: none;
+  .info-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 999px;
+    transition: all var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  .viewing-mode:hover .viewing-footer {
-    opacity: 1;
-    pointer-events: auto;
+  .info-btn:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.12);
   }
 
   /* ── Responsive ────────────────────────────────────── */
 
   @media (max-width: 768px) {
-    .viewing-mode {
-      height: auto;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .player-area {
-      position: relative;
-      aspect-ratio: 16 / 9;
-      width: 100%;
-      flex-shrink: 0;
-    }
-
-    .top-bar {
-      position: absolute;
-      z-index: 5;
-    }
-
     .camera-label {
       font-size: 0.75rem;
       gap: 0.3rem;
@@ -436,17 +411,7 @@
       display: none;
     }
 
-    .nav-controls {
-      position: absolute;
-      top: 0;
-      height: calc(100vw * 9 / 16);
-      transform: none;
-      align-items: center;
-    }
-
     .nav-btn {
-      width: 44px;
-      height: 44px;
       opacity: 0.5;
     }
 
@@ -455,9 +420,7 @@
     }
 
     .bottom-bar {
-      position: relative;
-      background: var(--bg, #0a0b0d);
-      padding: 1.25rem 1rem;
+      padding: 0.75rem 1rem;
       gap: 0.75rem;
     }
 
@@ -474,14 +437,6 @@
 
     .counter {
       font-size: 0.85rem;
-    }
-
-    .viewing-footer {
-      position: relative;
-      bottom: auto;
-      opacity: 1;
-      pointer-events: auto;
-      padding: 1rem 0;
     }
   }
 </style>
