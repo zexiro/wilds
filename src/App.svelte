@@ -35,17 +35,10 @@
     }
   }
 
-  /**
-   * Get the best video ID for a camera:
-   * live match from API if available, otherwise stored fallback.
-   */
-  function getVideoId(camera) {
-    return liveVideoIds.get(camera.id) || camera.youtubeVideoId;
-  }
-
   // Build cameras with resolved video IDs
+  // liveVideoIds must be read directly in $derived so Svelte tracks the dependency
   let resolvedCameras = $derived(
-    cameras.map(c => ({ ...c, resolvedVideoId: getVideoId(c) }))
+    cameras.map(c => ({ ...c, resolvedVideoId: liveVideoIds.get(c.id) || c.youtubeVideoId }))
   );
 
   let currentCamera = $derived(
