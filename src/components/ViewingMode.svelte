@@ -315,7 +315,7 @@
 
   .bottom-bar {
     position: absolute;
-    bottom: 0;
+    bottom: 3.5rem;
     left: 0;
     right: 0;
     display: flex;
@@ -323,7 +323,6 @@
     justify-content: center;
     gap: 1rem;
     padding: 0.75rem 1rem;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
     z-index: 5;
   }
 
@@ -392,7 +391,7 @@
 
   .viewing-footer {
     position: absolute;
-    bottom: 2.5rem;
+    bottom: 6rem;
     left: 0;
     right: 0;
     z-index: 4;
