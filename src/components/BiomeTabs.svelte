@@ -34,6 +34,7 @@
 <style>
   .biome-tabs {
     display: flex;
+    justify-content: center;
     gap: 0.25rem;
     padding: 0 2rem;
     overflow-x: auto;
