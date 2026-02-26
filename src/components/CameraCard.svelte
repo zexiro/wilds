@@ -10,7 +10,7 @@
 
   // YouTube provides thumbnails at predictable URLs
   let thumbnailUrl = $derived(
-    `https://img.youtube.com/vi/${camera.youtubeVideoId}/mqdefault.jpg`
+    `https://img.youtube.com/vi/${camera.resolvedVideoId || camera.youtubeVideoId}/mqdefault.jpg`
   );
 
   // Update time immediately and every minute

@@ -79,7 +79,7 @@
   <!-- Player -->
   <div class="player-area">
     {#key camera.id}
-      <YouTubePlayer videoId={camera.youtubeVideoId} />
+      <YouTubePlayer videoId={camera.resolvedVideoId || camera.youtubeVideoId} />
     {/key}
   </div>
 
