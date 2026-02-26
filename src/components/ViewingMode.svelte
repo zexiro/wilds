@@ -26,6 +26,7 @@
 
   // Wander mode: tick countdown every second, switch at 0
   $effect(() => {
+    camera.id; // track camera changes to reset countdown
     if (wanderMode && !wanderPaused) {
       countdown = 30;
       const tick = setInterval(() => {
@@ -165,7 +166,7 @@
           Paused
         {:else}
           <span class="wander-dot"></span>
-          Wandering · {countdown}<span class="unit">s</span>
+          Wandering · {countdown}
         {/if}
       </button>
     {/if}
@@ -365,10 +366,7 @@
     background: rgba(255, 255, 255, 0.14);
   }
 
-  .unit {
-    font-size: 0.6em;
-    opacity: 0.7;
-  }
+
 
   .wander-dot {
     width: 6px;
