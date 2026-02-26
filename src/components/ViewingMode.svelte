@@ -11,8 +11,8 @@
   let showInfo = $state(false);
   let localTime = $state(null);
   let biome = $derived(biomes[camera.biome]);
-  let wanderTimer = $state(null);
   let wanderPaused = $state(false);
+  let countdown = $state(30);
 
   // Update time immediately and every minute
   $effect(() => {
@@ -24,20 +24,23 @@
     return () => clearInterval(interval);
   });
 
-  // Wander mode: auto-cycle every 30 seconds (unless paused)
+  // Wander mode: tick countdown every second, switch at 0
   $effect(() => {
     if (wanderMode && !wanderPaused) {
-      wanderTimer = setInterval(() => {
-        goToNextCamera();
-      }, 30000);
-      return () => {
-        if (wanderTimer) clearInterval(wanderTimer);
-      };
+      countdown = 30;
+      const tick = setInterval(() => {
+        countdown -= 1;
+        if (countdown <= 0) {
+          goToNextCamera();
+        }
+      }, 1000);
+      return () => clearInterval(tick);
     }
   });
 
   function toggleWanderPause() {
     wanderPaused = !wanderPaused;
+    if (!wanderPaused) countdown = 30;
   }
 
   // Get camera index in the filtered list
@@ -162,7 +165,7 @@
           Paused
         {:else}
           <span class="wander-dot"></span>
-          Wandering
+          Wandering · {countdown}s
         {/if}
       </button>
     {/if}
